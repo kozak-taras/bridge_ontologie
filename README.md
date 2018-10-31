@@ -1,2 +1,2 @@
-# bridge_ontologie
-Ontologie of a bridge structure
+# bridge_ontology
+Ontology of a bridge structure
