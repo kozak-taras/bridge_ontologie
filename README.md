@@ -1,3 +1,2 @@
-# BROT = bridge_topology_ontology
-BROT = BRidge Topology Ontology
+# BROT = BRidge_Topology_Ontology
 Ontology of bridge structures
