@@ -1,2 +1,2 @@
-# BROT = BRidge_Ontology
+# bridge = Bridge Ontology
 Ontology of bridge structures
