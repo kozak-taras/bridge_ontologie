@@ -1,0 +1,2933 @@
+@prefix : <http://www.semanticweb.org/taras.kozak/bridge#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix swrla: <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix bridge: <http://www.semanticweb.org/taras.kozak/bridge#> .
+@base <http://www.semanticweb.org/taras.kozak/bridge> .
+
+<http://www.semanticweb.org/taras.kozak/bridge> rdf:type owl:Ontology ;
+                                                 owl:versionIRI <http://www.semanticweb.org/taras.kozak/bridge/1.1> ;
+                                                 rdfs:comment "This ontology is designed for bridge structures. The focus have been set on bridges, which consist mainly of reinforced concrete."@en ,
+                                                              "The suggested prefix for the Bridge Ontology namespace is bridge"@en ,
+                                                              """IMPORTANT:
+FOR THE CORRECT REPRESENTATION OF CLASS NAMES THE SETTING \"ENTITY RENDERING\" SHOULD TO BE SET TO \"RENDER BY ENTITY IRI SHORT NAME (ID)\"."""@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled
+swrla:isRuleEnabled rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/taras.kozak/bridge#bears
+bridge:bears rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf bridge:getsLoadsFrom ,
+                                bridge:hasContactWith ,
+                                bridge:locatedBelow ;
+             owl:inverseOf bridge:restOn .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#connectedTo
+bridge:connectedTo rdf:type owl:ObjectProperty ,
+                            owl:SymmetricProperty ;
+                   rdfs:domain bridge:Element ;
+                   rdfs:range bridge:Element ;
+                   rdfs:comment "Die Relation gewährleistet den Anschluss eines Elementes zu einem anderem, wobei eine Lastübertragung durch die Verbindung vorgesehen wird."@de ,
+                                "This relationship pointed that an element is connected to an another element, whereby some loads are transfered through the connection."@en ;
+                   rdfs:label "angeschlossen zu"@de ,
+                              "connected to"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#containedIn
+bridge:containedIn rdf:type owl:ObjectProperty ;
+                   owl:inverseOf bridge:contains ;
+                   rdf:type owl:TransitiveProperty ;
+                   rdfs:comment """Diese Relation gewaehrleistet die Zugehoerigkeit eines physikalischen Elementes bzw. einer Komponente bzw. einer raeumlichen Zone einer anderen uebergeordneten raeumlichen Zone.
+Zum Beispiel:
+Ein Pfahl (Element) ist im Unterbau enthalten.
+Der westclihe Widerlager (Komponente) ist in dem westlichen Brueckenteil enthalten. 
+Die Spannweiten B und C (raeumliche Zone) sind in dem Brueckenteil A enthalten."""@de ,
+                                """This relationship provides belongings of an physical element or a component or a spatial zone to another superior spatial zone.
+For example:
+The pile (element) is contained in superstructure.
+The west abutment (component) is contained in the west bridge part.
+The spans B and C (spatial zone) are contained in the bridge part A."""@en ;
+                   rdfs:label "contained in a spatial zone"@en ,
+                              "enthalten in einer raeumlichen Zone"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#contains
+bridge:contains rdf:type owl:ObjectProperty ,
+                         owl:TransitiveProperty ;
+                rdfs:domain bridge:SpatialZone ;
+                rdfs:comment """Diese Relation gewaehrleistet die Zusammensetzung von physikalischen Elementen bzw. Komponenten bzw. von raeumlichen Zonen in eine andere uebergeordnete raeumliche Zone.
+Zum Beispiel: der westliche Brueckenteil A enthaelt den westlichen Widerlager B (Komponente). Der Brueckenteil C enthaelt die Spannweiten D und E (raeumliche Zone)."""@de ,
+                             """This relationship provides aggregation of physical elements or components or spatial zones to another superior spatial zone.
+For example: the west bridge part A contains the west abutment B (component). The bridge part C contains spans D and E (spatial zone)."""@de ;
+                rdfs:label "contains an element, component or a zone"@en ,
+                           "enthaelt ein Element, eine Komponente oder eine Zone"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#getsLoadsFrom
+bridge:getsLoadsFrom rdf:type owl:ObjectProperty ,
+                              owl:TransitiveProperty .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#hasAxis
+bridge:hasAxis rdf:type owl:ObjectProperty ,
+                        owl:SymmetricProperty ;
+               owl:propertyChainAxiom ( bridge:isSubElementOf
+                                        bridge:hasAxis
+                                      ) .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#hasContactWith
+bridge:hasContactWith rdf:type owl:ObjectProperty ,
+                               owl:SymmetricProperty ;
+                      rdfs:comment "Das ist eine Relation zwischen Elementen, die durch eine Beruerungsflaeche einen physikalischen Kontakt miteinander haben, wobei sie sich nicht ueberschneiden."@de ,
+                                   "This is a relationship between elements which have physical contact to each other through a common interface, but do not intersect."@en ;
+                      rdfs:label "has contact with"@en ,
+                                 "hat einen Kontakt mit"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#hasSegment
+bridge:hasSegment rdf:type owl:ObjectProperty ;
+                  owl:inverseOf bridge:isSegmentOf ;
+                  rdfs:range bridge:Segment .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#hasSubElement
+bridge:hasSubElement rdf:type owl:ObjectProperty ;
+                     owl:inverseOf bridge:isSubElementOf ;
+                     rdfs:domain bridge:Element ;
+                     rdfs:range bridge:Element .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#isReinforcedWith
+bridge:isReinforcedWith rdf:type owl:ObjectProperty ;
+                        owl:inverseOf bridge:reinforcesAnElement ;
+                        rdf:type owl:AsymmetricProperty ;
+                        rdfs:domain bridge:Element ;
+                        rdfs:range bridge:ReinforcingElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#isSegmentOf
+bridge:isSegmentOf rdf:type owl:ObjectProperty ;
+                   rdfs:domain bridge:Segment .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#isSubElementOf
+bridge:isSubElementOf rdf:type owl:ObjectProperty ;
+                      rdfs:domain bridge:Element ;
+                      rdfs:range bridge:Element .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#locatedAbove
+bridge:locatedAbove rdf:type owl:ObjectProperty ;
+                    owl:inverseOf bridge:locatedBelow ;
+                    rdf:type owl:TransitiveProperty ;
+                    rdfs:comment "Diese Relation stellt dar, dass ein Element sich über einem anderen befindet. Die Elemente sind nicht gezwungen einen physicalischen bzw. logischen Kontakt zu haben. Die Relation zeigt bloß das räumliche Verhalten."@de ,
+                                 "This relationship points that in a modell an element located above an another element. The elements are not obliged to have a physical or logical connection. The relationship shows only space atittude."@en ;
+                    rdfs:label "befindet sich über"@de ,
+                               "locate above"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#locatedBelow
+bridge:locatedBelow rdf:type owl:ObjectProperty ,
+                             owl:TransitiveProperty ;
+                    rdfs:comment "Diese Relation stellt dar, dass ein Element sich unter einem anderen befindet. Die Elemente sind nicht gezwungen einen physicalischen bzw. logischen Kontakt zu haben. Die Relation zeigt bloß das räumliche Verhalten."@de ,
+                                 "This relationship points that in a modell an element located below an another element. The elements are not obliged to have a physical or logical connection. The relationship shows only space atittude."@en ;
+                    rdfs:label "befindet sich unter"@de ,
+                               "located below"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#reinforcesAnElement
+bridge:reinforcesAnElement rdf:type owl:ObjectProperty ,
+                                    owl:AsymmetricProperty ;
+                           rdfs:domain bridge:ReinforcingElement ;
+                           rdfs:range bridge:Element .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#restOn
+bridge:restOn rdf:type owl:ObjectProperty ;
+              rdfs:comment "Bei dieser Relation ist angegegeben, dass ein Element A sich auf ein anderes Element B stuetzt und das Element A leitet die Lasten zu dem unteren Element B weiter"@de ,
+                           "By this relationship is pointed that an element A rest on an other element B and transmit some load to the lower element B."@en ;
+              rdfs:label "liegt auf"@de ,
+                         "rest on"@en .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/taras.kozak/bridge#doc_appropriateRegulations
+bridge:doc_appropriateRegulations rdf:type owl:DatatypeProperty ;
+                                  rdfs:comment """DATA TYPE INPUT VALUE:
+
+xsd:string"""@en ,
+                                               """DATENTYP DES EINGABEWERTES:
+
+xsd:string"""@de ;
+                                  rdfs:label "Appropriate regulations"@en ,
+                                             "Zugehoerige Vorschrifte"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#doc_dataCollectionCompleted
+bridge:doc_dataCollectionCompleted rdf:type owl:DatatypeProperty ;
+                                   rdfs:comment """ENUMERATION VALUES:
+
+COMPLETED
+NOT_COMPLETED"""@en ,
+                                                """WERTEVERZEICHNIS:
+
+ABGESCHLOSSEN
+NICHT_ABGESCHLOSSEN"""@de ;
+                                   rdfs:label "Data collection is completed"@en ,
+                                              "Datenerfassung ist abgeschlossen"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#doc_dataCollectionDate
+bridge:doc_dataCollectionDate rdf:type owl:DatatypeProperty ;
+                              rdfs:comment """DATA TYPE INPUT VALUE:
+
+xsd:nonNegativeInteger
+
+VALUE FORMAT:
+yymmdd
+e.g:  190225 = 25.02.2019"""@en ,
+                                           """DATENTYP DES EINGABEWERTES:
+
+xsd:nonNegativeInteger
+
+FORMAT DES WERTES:
+yymmdd
+z. B.: 190225 = 25.02.2019"""@de ;
+                              rdfs:label "Date of the data collection"@en ,
+                                         "Datumsangabe zur Datenerfassung"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#doc_documentationAvailability
+bridge:doc_documentationAvailability rdf:type owl:DatatypeProperty ;
+                                     rdfs:comment """ENUMERATION VALUES:
+
+YES
+NO
+PARTIALLY"""@en ,
+                                                  """WERTEVERZEICHNIS:
+
+JA
+NEIN
+TEILWEISE"""@de ;
+                                     rdfs:label "Availability of documentation (designs and statics, plans, details  i.e.)"@en ,
+                                                "Verfuegbarkeit von Unterlagen (Statik, Plaene, Details usw.)"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#doc_documentationRegister
+bridge:doc_documentationRegister rdf:type owl:DatatypeProperty ;
+                                 rdfs:comment """DATA TYPE INPUT VALUE:
+
+xsd:string"""@en ,
+                                              """DATENTYP DES EINGABEWERTES:
+
+xsd:string"""@de ;
+                                 rdfs:label "Liste von verfuegbaren Unterlagen"@de ,
+                                            "Register of available documents"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_ageOfElement
+bridge:elem_ageOfElement rdf:type owl:DatatypeProperty ;
+                         rdfs:comment """DATA TYPE INPUT VALUE: 
+
+xsd:nonNegativeInteger"""@en ;
+                         rdfs:label "Age of the element"@en ,
+                                    "Alter des Bauteils"@de ,
+                                    """DATENTYP DES EINGABEWERTES:
+
+xsd:nonNegativeInteger"""@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_bearingsCriticalTemperatureSummer
+bridge:elem_bearingsCriticalTemperatureSummer rdf:type owl:DatatypeProperty ;
+                                              rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [Grad]"""@de ,
+                                                           """TYPE INPUT VALUE: 
+
+xsd:double [degree]"""@en ;
+                                              rdfs:label "Bearings critical temperature in summer"@en ,
+                                                         "Kritische Temperatur fuer das Lager im Winter"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_bearingsCriticalTemperatureWinter
+bridge:elem_bearingsCriticalTemperatureWinter rdf:type owl:DatatypeProperty ;
+                                              rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [Grad]"""@de ,
+                                                           """TYPE INPUT VALUE: 
+
+xsd:double [degree]"""@en ;
+                                              rdfs:label "Bearings critical temperature in winter"@en ,
+                                                         "Kritische Temperatur fuer das Lager im Sommer"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_bearingsDegreeOfFreedomDisplacement
+bridge:elem_bearingsDegreeOfFreedomDisplacement rdf:type owl:DatatypeProperty ;
+                                                rdfs:comment """ENUMERATION VALUES:
+
+X_FIXED
+Y_FIXED
+Z_FIXED
+X_Y_FIXED
+Z_X_FIXED
+Z_Y_FIXED
+X_Y_Z_FIXED"""@en ,
+                                                             """WERTEVERZEICHNIS:
+
+X_FEST
+Y_FEST
+Z_FEST
+X_Y_FEST
+Z_X_FEST
+Z_Y_FEST
+X_Y_Z_FEST"""@de ;
+                                                rdfs:label "Degree of freedom of the bearings (displacement)"@en ,
+                                                           "Freiheitsgrade des Lagers (Verschiebung)"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_bearingsDegreeOfFreedomTorsion
+bridge:elem_bearingsDegreeOfFreedomTorsion rdf:type owl:DatatypeProperty ;
+                                           rdfs:comment """ENUMERATION VALUES:
+
+ARROUND_X_FIXED
+ARROUND_Y_FIXED
+ARROUND_Z_FIXED
+ARROUND_X_Y_FIXED
+ARROUND_X_Z_FIXED
+ARROUND_Y_Z_FIXED
+ARROUND_X_Y_Z_FIXED"""@en ,
+                                                        """WERTEVERZEICHNIS:
+
+UM_X_FEST
+UM_Y_FEST
+UM_Z_FEST
+UM_X_Y_FEST
+UM_X_Z_FEST
+UM_Y_Z_FEST
+UM_X_Y_Z_FEST"""@de ;
+                                           rdfs:label "Degree of freedom of the bearings (torsion)"@en ,
+                                                      "Freiheitsgrade des Lagers (Torsion)"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_bearingsReinforcedType
+bridge:elem_bearingsReinforcedType rdf:type owl:DatatypeProperty ;
+                                   rdfs:comment """ENUMERATION VALUES:
+
+REINFORCED
+UNREINFORCED"""@en ,
+                                                """WERTEVERZEICHNIS:
+
+BEWEHRT
+UNBEWEHRT"""@de ;
+                                   rdfs:label "Typ des Lagers"@de ,
+                                              "Type of bearings"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_bridgeGirderTensionPresence
+bridge:elem_bridgeGirderTensionPresence rdf:type owl:DatatypeProperty ;
+                                        rdfs:comment """ENUMERATION VALUES:
+
+PRETENSIONING
+POSTTENSIONING"""@en ,
+                                                     """WERTENVERZEICHNIS:
+
+VORSPANNUNG
+NACHSPANNUNG"""@de ;
+                                        rdfs:label "Presence of pre- or posttensioning of tendon"@en ,
+                                                   "Vorhandensein der Vor- bzw. Nachspannung des Zugglieders"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_bridgeGirderTensionValue
+bridge:elem_bridgeGirderTensionValue rdf:type owl:DatatypeProperty ;
+                                     rdfs:comment """DATA TYPE INPUT VALUE:
+
+xsd:double"""@en ,
+                                                  """DATENTYP DES EINGABEWERTES:
+
+xsd:double"""@de ;
+                                     rdfs:label "Value of pre- or posttensioning of tendon"@en ,
+                                                "Wert der Vor- bzw. Nachspannung des Zugglieders"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_concreteCover
+bridge:elem_concreteCover rdf:type owl:DatatypeProperty ;
+                          rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:nonNegativeInteger [mm]"""@de ,
+                                       """TYPE INPUT VALUE: 
+
+xsd:nonNegativeInteger [mm]"""@en ;
+                          rdfs:label "Betondeckung fuer das ganze Element"@de ,
+                                     "Concrete cover for the whole element"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_concreteCoverAllSides
+bridge:elem_concreteCoverAllSides rdf:type owl:DatatypeProperty ;
+                                  rdfs:comment """For example: for a footing/column/pier these are 4 vertical sides along the vertical longitudinal axis. For a bridge girder - all sides along the longitudinal axis.
+
+TYPE INPUT VALUE: 
+
+xsd:nonNegativeInteger [mm]"""@en ,
+                                               """Zum Beispiel: fuer eine Gruendung/Stuetze das sind 4 Seiten entlang der vertikalen Laengsachse. Fuer einen Brueckendeck - alle Seiten entlang der Laengsachse.
+
+DATENTYP DES EINGABEWERTES:
+
+xsd:nonNegativeInteger [mm]"""@de ;
+                                  rdfs:label "Betondeckung allseitig"@de ,
+                                             "Concrete cover all sides"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_concreteCoverBottom
+bridge:elem_concreteCoverBottom rdf:type owl:DatatypeProperty ;
+                                rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:nonNegativeInteger [mm]"""@de ,
+                                             """TYPE INPUT VALUE: 
+
+xsd:nonNegativeInteger [mm]"""@en ;
+                                rdfs:label "Betondeckung unten"@de ,
+                                           "Concrete cover bottom"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_concreteCoverTop
+bridge:elem_concreteCoverTop rdf:type owl:DatatypeProperty ;
+                             rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:nonNegativeInteger [mm]"""@de ,
+                                          """TYPE INPUT VALUE: 
+
+xsd:nonNegativeInteger [mm]"""@en ;
+                             rdfs:label "Betondeckung oben"@de ,
+                                        "Concrete cover top"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_elementDescription
+bridge:elem_elementDescription rdf:type owl:DatatypeProperty ;
+                               rdfs:comment """DATA TYPE INPUT VALUE: 
+
+xsd:string"""@en ,
+                                            """DATENTYP DES EINGABEWERTES:
+
+xsd:string"""@de ;
+                               rdfs:label "Description of the element"@en ,
+                                          "Elementbezeichnung"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_elementExistingOrNew
+bridge:elem_elementExistingOrNew rdf:type owl:DatatypeProperty ;
+                                 rdfs:comment """ENUMERATION VALUES:
+
+EXISTING
+NEW"""@en ,
+                                              """WERTEVERZECIHNIS:
+
+BESTAND
+NEU"""@de ;
+                                 rdfs:label "Element gehoert zum Neubau oder Bestand"@de ,
+                                            "The element is existing or new"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_expansionJointMovementRange
+bridge:elem_expansionJointMovementRange rdf:type owl:DatatypeProperty ;
+                                        rdfs:comment """ENUMERATION VALUES:
+
+LARGE - Bridge expansion joint for a LARGE movement range (more as 10cm)
+MEDIUM - Bridge expansion joint for a MEDIUM movement range (5-10cm)
+SMALL - Bridge expansion joint for a SMALL movement range (1-5cm)"""@en ,
+                                                     """WERTEVERZEICHNIS:
+
+GROSS - Bewegungsfuge fuer den GROSSEN Bewegungsbereich (mehr als 10cm)
+MITTEL - Bewegungsfuge fuer den MITTLEREN Bewegungsbereich (5-10cm)
+KLEIN - Bewegungsfuge fuer den KLEINEN Bewegungsbereich (1-5cm)"""@de ;
+                                        rdfs:label "Bewegungsbereich der Fuge"@de ,
+                                                   "Movement range of the expansion joint"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_manufacturer
+bridge:elem_manufacturer rdf:type owl:DatatypeProperty ;
+                         rdfs:comment """DATA TYPE INPUT VALUE: 
+
+xsd:string"""@en ,
+                                      """DATENTYP DES EINGABEWERTES:
+
+xsd:string"""@de ;
+                         rdfs:label "Hersteller"@de ,
+                                    "Manufacturer"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_memberType
+bridge:elem_memberType rdf:type owl:DatatypeProperty ;
+                       rdfs:comment """ENUMERATION VALUES:
+
+MEMBER_TENSILE
+MEMBER_COMPRESSIVE
+MEMBER_NONDEFINED"""@en ,
+                                    """WERTEVERZEICHNIS:
+
+ZUGELEMENT
+DRUCKELEMENT
+ELEMENT_NICHTDEFINIERT"""@de ;
+                       rdfs:label "Typ des Elements"@de ,
+                                  "Type of member"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_precastElement
+bridge:elem_precastElement rdf:type owl:DatatypeProperty ;
+                           rdfs:comment """ENUMERATION VALUES:
+
+YES
+NO
+PARTIALLY"""@en ,
+                                        """WERTEVERZEICHNIS:
+
+JA
+NEIN
+TEILWEISE"""@de ;
+                           rdfs:label "Fertigbauteil"@de ,
+                                      "Precast element"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_reinforcementLayerOrder
+bridge:elem_reinforcementLayerOrder rdf:type owl:DatatypeProperty ;
+                                    rdfs:comment """ENUMERATION VALUES:
+
+1.
+2.
+3.
+4.
+5.
+i.e."""@en ,
+                                                 """WERTEVERZEICHNIS:
+
+1.
+2.
+3.
+4.
+5.
+usw."""@de ;
+                                    rdfs:label "Order of the reinforcement layer"@en ,
+                                               "Reihenfolge der Bewehrungslage"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_reinforcementLayerPosition
+bridge:elem_reinforcementLayerPosition rdf:type owl:DatatypeProperty ;
+                                       rdfs:comment """ENUMERATION VALUES:
+
+HORIZONTAL
+VERTICAL
+SLOPED"""@en ,
+                                                    """WERTEVERZEICHNIS:
+
+HORIZONTAL
+VERTIKAL
+SCHRAEG"""@de ;
+                                       rdfs:label "Position der Bewehrungslage"@de ,
+                                                  "Position of the reinforcement layer"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_reinforcementPercentage
+bridge:elem_reinforcementPercentage rdf:type owl:DatatypeProperty ;
+                                    rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [%]"""@de ,
+                                                 """TYPE INPUT VALUE: 
+
+xsd:double [%]"""@en ;
+                                    rdfs:label "Bewehrungsgrad des Bauteils"@de ,
+                                               "Percentage of reinforcement of the element"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_reinforcementPrestressingLevel
+bridge:elem_reinforcementPrestressingLevel rdf:type owl:DatatypeProperty ;
+                                           rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double"""@de ,
+                                                        """DATENTYP DES EINGABEWERTES:
+
+xsd:double"""@en ;
+                                           rdfs:label "Prestressing level of reinforcement"@en ,
+                                                      "Vorspanngrad der Bewehrung"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_reinforcementTask
+bridge:elem_reinforcementTask rdf:type owl:DatatypeProperty ;
+                              rdfs:comment """ENUMERATION VALUES:
+
+STATICALLY_REQUIRED
+SECONDARY"""@en ,
+                                           """WERTEVERZEICHNIS:
+
+STATISCH_ERFORDERLICH
+KONSTRUKTIV"""@de ;
+                              rdfs:label "Aufgabe der Bewehrung"@de ,
+                                         "Reinforcement task"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_tendonDirectionType
+bridge:elem_tendonDirectionType rdf:type owl:DatatypeProperty ;
+                                rdfs:comment """ENUMERATION VALUES:
+
+LONGITUDINAL
+TRANSVERSE"""@en ,
+                                             """WERTEVERZEICHNIS:
+
+LAENGS
+QUER"""@de ;
+                                rdfs:label "Typ des Spanglieds bezüglich der Ausrichtung im Brückendeck"@de ,
+                                           "Type of tendon according to direction in the girder"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_tendonTensionType
+bridge:elem_tendonTensionType rdf:type owl:DatatypeProperty ;
+                              rdfs:comment """ENUMERATION VALUES:
+
+PRE_TENSIONED
+POST_TENSIONED"""@en ,
+                                           """WERTEVERZEICHNIS:
+
+VORSPANNUNG
+NACHSPANNUNG"""@de ;
+                              rdfs:label "Spannungstyp des Zugglieders"@de ,
+                                         "Tensioning type of tendon"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_tensionForce
+bridge:elem_tensionForce rdf:type owl:DatatypeProperty ;
+                         rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [kN]"""@de ,
+                                      """TYPE INPUT VALUE: 
+
+xsd:double [kN]"""@en ;
+                         rdfs:label "Spannkraft"@de ,
+                                    "Tension force"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_tensioningTechnology
+bridge:elem_tensioningTechnology rdf:type owl:DatatypeProperty ;
+                                 rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:string"""@de ,
+                                              """TYPE INPUT VALUE: 
+
+xsd:string"""@en ;
+                                 rdfs:label "Spannverfahren"@de ,
+                                            "Tensioning technology"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#elem_yearOfInstallation
+bridge:elem_yearOfInstallation rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_aggregateGrainSize
+bridge:mat_aggregateGrainSize rdf:type owl:DatatypeProperty ;
+                              rdfs:comment """ENUMERATION VALUES:
+
+(Classification according to DIN EN 12620)
+
+COARSE
+FINE
+NAT_COMP_AGGR - (natural composite agregate 0/8)
+GRAIN_MIXTURE"""@en ,
+                                           """WERTEVERZEICHNIS:
+
+(Definition nach DIN EN 12620)
+
+GROB 
+FEIN
+ZSMMNGSTZT_GESTEINSKOE - (natuerlich zusammengesetzte Gesteinskoernung 0/8)
+KORNGEMISCH"""@de ;
+                              rdfs:label "Grain size distribution of the beton aggregate"@en ,
+                                         "Korngroesseverteilung von Gesteinskoernungen fuer Beton"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_cementContent
+bridge:mat_cementContent rdf:type owl:DatatypeProperty ;
+                         rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [Wasser/Zement]"""@de ,
+                                      """TYPE INPUT VALUE: 
+
+xsd:double [watter/cement]"""@en ;
+                         rdfs:label "Cement content"@en ,
+                                    "Zementgehalt"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_cementDesignation
+bridge:mat_cementDesignation rdf:type owl:DatatypeProperty ;
+                             rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:string"""@de ,
+                                          """TYPE INPUT VALUE: 
+
+xsd:string"""@en ;
+                             rdfs:label "Cement designation"@en ,
+                                        "Zementbezeichnung"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_cementMainConstituents
+bridge:mat_cementMainConstituents rdf:type owl:DatatypeProperty ;
+                                  rdfs:comment """(Klassifizierung erfolgt gemaess DIN EN 197-1.)
+
+WERTEVERZEICHNIS:
+
+K - Portlandzementklinker
+S - Huettensand (granulierte Hochofenschlacke)
+P - Natuerliches Puzzolan
+Q - Natuerliches getempertes Puzzolan
+V - Kieselsaeurereiche Flugasche
+W - Kalkreiche Flugasche
+T - Gebrannter Schiefer
+LL - Kalkstein (darf einen Massenanteil von 0,20 % nicht ueberschreiten)
+L - Kalkstein (darf einen Massenanteil von 0,50 % nicht ueberschreiten)
+D - Silicastaub"""@de ,
+                                               """ENUMERATION VALUES:
+
+(Classification according to DIN EN 197-1)
+
+K - Portland cement clinker
+S - Granulated blastfurnace slag
+P - Natural pozzolana
+Q - Natural calcined pozzolana
+V - Siliceous fly ash
+W - Calcareous fly ash
+T - Burnt shale
+LL- Limestone (shall not exceed 0,20 % by mass)
+L- Limestone (shall not exceed 0,50 % by mass)
+D - Silica fume"""@en ;
+                                  rdfs:label "Hauptbestandteile vom Zement"@de ,
+                                             "Main constituents of the cement"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_cementType
+bridge:mat_cementType rdf:type owl:DatatypeProperty ;
+                      rdfs:comment """(Classification is according to DIN EN 197-1.)
+
+ENUMERATION VALUES:
+
+CEM_I - Portland cement
+CEM_II - Portland-composite cement
+CEM_III - Blastfurnace cement
+CEM_IV - Pozzolanic cement
+CEM_V - Composite cement"""@en ,
+                                   """(Klassifizierung erfolgt gemaess DIN EN 197-1.)
+
+WERTEVERZEICHNIS:
+
+CEM_I - Portlandzemente
+CEM_II - Portlandkompositzemente
+CEM_III - Hochofenzemente
+CEM_IV - Puzzolanzemente
+CEM_V - Kompositzemente"""@de ;
+                      rdfs:label "Cement type"@en ,
+                                 "Zementart"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_coatDesignation
+bridge:mat_coatDesignation rdf:type owl:DatatypeProperty ;
+                           rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:string"""@de ,
+                                        """TYPE INPUT VALUE: 
+
+xsd:string"""@en ;
+                           rdfs:label "Beschichtungsbezeichnung"@de ,
+                                      "Coat designation"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_concreteAdmixture
+bridge:mat_concreteAdmixture rdf:type owl:DatatypeProperty ;
+                             rdfs:comment """ENUMERATION VALUES:
+
+FLY_ASH
+SILICA_FUME
+GRANULATED_SLAG
+TRASS
+FIBRES"""@en ,
+                                          """WERTEVERZEICHNIS:
+
+FLUGASCHE
+SILIKASTAUB
+HUETTENSAND
+TRASS
+FASERN"""@de ;
+                             rdfs:label "Betonzusatzstoffe"@de ,
+                                        "Concrete admixture"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_concreteCompressionStrengthClass
+bridge:mat_concreteCompressionStrengthClass rdf:type owl:DatatypeProperty ;
+                                            rdfs:comment """ENUMERATION VALUES:
+
+C8/10
+C12/15
+C16/20
+C20/25
+C25/30
+C30/37
+C35/45
+C40/50
+C45/55
+C50/60
+C55/67
+C60/75
+C70/85
+C80/95
+C90/105
+C100/115"""@en ,
+                                                         """WERTEVERZEICHNIS:
+
+C8/10
+C12/15
+C16/20
+C20/25
+C25/30
+C30/37
+C35/45
+C40/50
+C45/55
+C50/60
+C55/67
+C60/75
+C70/85
+C80/95
+C90/105
+C100/115"""@de ;
+                                            rdfs:label "Class of compression strength of the concrete"@en ,
+                                                       "Druckfestigkeitsklasse des Betons"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_concreteStrengthCube
+bridge:mat_concreteStrengthCube rdf:type owl:DatatypeProperty ;
+                                rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [N/mm2]"""@de ,
+                                             """TYPE INPUT VALUE:
+
+xsd:double [N/mm2]"""@en ;
+                                rdfs:label "Cube compressive strength of concrete"@en ,
+                                           "Wuerfeldruckfestigkeit vom Beton"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_concreteStrengthCylindrical
+bridge:mat_concreteStrengthCylindrical rdf:type owl:DatatypeProperty ;
+                                       rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [N/mm2]"""@de ,
+                                                    """TYPE INPUT VALUE:
+
+xsd:double [N/mm2]"""@en ;
+                                       rdfs:label "Cylindrical compressive strength of concrete"@en ,
+                                                  "Zylinderdruckfestigkeit vom Beton"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_expositionClassConcreteX0
+bridge:mat_expositionClassConcreteX0 rdf:type owl:DatatypeProperty ;
+                                     rdfs:comment """ENUMERATION VALUES:
+
+(Classification according to DIN 1045-2)
+
+X0"""@en ,
+                                                  """WERTEVERZEICHNIS:
+
+(Klassifikation gemaess DIN 1045-2)
+
+X0"""@de ;
+                                     rdfs:label "Exposition class of concrete X0 - no risk of corrosion or attack"@en ,
+                                                "Expositionsklasse fuer Beton X0 - kein Korrosions- oder Angriffsrisiko"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_expositionClassConcreteXA
+bridge:mat_expositionClassConcreteXA rdf:type owl:DatatypeProperty ;
+                                     rdfs:comment """ENUMERATION VALUES:
+
+(Classification according to DIN 1045-2)
+
+XA1
+XA2
+XA3"""@de ,
+                                                  """WERTEVERZEICHNIS:
+
+(Klassifikation gemaess DIN 1045-2)
+
+XA1
+XA2
+XA3"""@de ;
+                                     rdfs:label "Exposition class of concrete corrosion through chemical attack"@en ,
+                                                "Expositionsklasse fuer Betonkorrosion durch chemischen Angriff"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_expositionClassConcreteXF
+bridge:mat_expositionClassConcreteXF rdf:type owl:DatatypeProperty ;
+                                     rdfs:comment """ENUMERATION VALUES:
+
+(Classification according to DIN 1045-2)
+
+XF1
+XF2
+XF3
+XF4"""@en ,
+                                                  """WERTEVERZEICHNIS:
+
+(Klassifikation gemaess DIN 1045-2)
+
+XF1
+XF2
+XF3
+XF4"""@de ;
+                                     rdfs:label "Exposition class of concrete corrosion through freeze-thaw attack"@en ,
+                                                "Expositionsklasse fuer Betonkorrosion durch Frostangriff"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_expositionClassConcreteXM
+bridge:mat_expositionClassConcreteXM rdf:type owl:DatatypeProperty ;
+                                     rdfs:comment """ENUMERATION VALUES:
+
+(Classification according to DIN 1045-2)
+
+XM1
+XM2
+XM3"""@en ,
+                                                  """WERTEVERZEICHNIS:
+
+(Klassifikation gemaess DIN 1045-2)
+
+XM1
+XM2
+XM3"""@de ;
+                                     rdfs:label "Exposition class of concrete corrosion through wear stress"@en ,
+                                                "Expositionsklasse fuer Betonkorrosion durch Verschleissbeanspruchung"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_expositionClassReinforcementXC
+bridge:mat_expositionClassReinforcementXC rdf:type owl:DatatypeProperty ;
+                                          rdfs:comment """ENUMERATION VALUES:
+
+(Classification according to DIN 1045-2)
+
+XC1
+XC2
+XC3
+XC4"""@en ,
+                                                       """WERTEVERZEICHNIS:
+
+(Klassifikation gemaess DIN 1045-2)
+
+XC1
+XC2
+XC3
+XC4"""@de ;
+                                          rdfs:label "Exposition class of reinforcement corrosion through carbonation"@en ,
+                                                     "Expositionsklasse fuer Bewehrungskorrosion durch Karbonatisierung"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_expositionClassReinforcementXD
+bridge:mat_expositionClassReinforcementXD rdf:type owl:DatatypeProperty ;
+                                          rdfs:comment """ENUMERATION VALUES:
+
+(Classification according to DIN 1045-2)
+
+XD1
+XD2
+XD3"""@en ,
+                                                       """WERTEVERZEICHNIS:
+
+(Klassifikation gemaess DIN 1045-2)
+
+XD1
+XD2
+XD3"""@en ;
+                                          rdfs:label "Exposition class of reinforcement corrosion through chlorides (except seawater)"@en ,
+                                                     "Expositionsklasse fuer Bewehrungskorrosion durch Chloride (ausser Meerwasser)"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_expositionClassReinforcementXS
+bridge:mat_expositionClassReinforcementXS rdf:type owl:DatatypeProperty ;
+                                          rdfs:comment """ENUMERATION VALUES:
+
+(Classification according to DIN 1045-2)
+
+XS1
+XS2
+XS3"""@en ,
+                                                       """WERTEVERZEICHNIS:
+
+(Klassifikation gemaess DIN 1045-2)
+
+XS1
+XS2
+XS3"""@de ;
+                                          rdfs:label "Exposition class of reinforcement corrosion through chlorides from seawater"@en ,
+                                                     "Expositionsklasse fuer Bewehrungskorrosion durch Chloride aus Meerwasser"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_moistureClassConcreteW
+bridge:mat_moistureClassConcreteW rdf:type owl:DatatypeProperty ;
+                                  rdfs:comment """ENUMERATION VALUES:
+
+(Classification according to DIN 1045-2)
+
+WO
+WF
+WA
+WS"""@en ,
+                                               """WERTEVERZEICHNIS:
+
+(Klassifikation gemaess DIN 1045-2)
+
+WO
+WF
+WA
+WS"""@de ;
+                                  rdfs:label "Feuchtigkeitsklasse fuer Betonkorrosion"@de ,
+                                             "Moisture class of beton corrosion"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_monitoringClassConcrete
+bridge:mat_monitoringClassConcrete rdf:type owl:DatatypeProperty ;
+                                   rdfs:comment """ENUMERATION VALUES:
+
+1
+2
+3"""@en ,
+                                                """WERTEVERZEICHNIS:
+
+1
+2
+3"""@de ;
+                                   rdfs:label "Monitoring class for concrete"@en ,
+                                              "Ueberwachungklasse fuer Beton"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_reinforcementBreakingStrength
+bridge:mat_reinforcementBreakingStrength rdf:type owl:DatatypeProperty ;
+                                         rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [N/mm2]"""@de ,
+                                                      """TYPE INPUT VALUE:
+
+xsd:double [N/mm2]"""@en ;
+                                         rdfs:label "Breaking strength of reinforcing steel"@en ,
+                                                    "Bruchgrenze des Bewehrungsstahls"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_reinforcementGrade
+bridge:mat_reinforcementGrade rdf:type owl:DatatypeProperty ;
+                              rdfs:comment """ENUMERATION VALUE:
+
+B500A
+B500B
+B500C"""@en ,
+                                           """WERTEVERZEICHNIS:
+
+B500A
+B500B
+B500C"""@de ;
+                              rdfs:label "Bewehrungsklasse"@de ,
+                                         "Reinforcement grade"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_reinforcementYieldStrength
+bridge:mat_reinforcementYieldStrength rdf:type owl:DatatypeProperty ;
+                                      rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [N/mm2]"""@de ,
+                                                   """TYPE INPUT VALUE:
+
+xsd:double [N/mm2]"""@en ;
+                                      rdfs:label "Streckgrenze des Bewehrungsstahls"@de ,
+                                                 "Yield strength of reinforcing steel"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_tendonSteelBreakingStrength
+bridge:mat_tendonSteelBreakingStrength rdf:type owl:DatatypeProperty ;
+                                       rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [N/mm2]"""@de ,
+                                                    """TYPE INPUT VALUE:
+
+xsd:double [N/mm2]"""@en ;
+                                       rdfs:label "Breaking strength of tendon steel"@en ,
+                                                  "Bruchgrenze des Spanngliedsstahles"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#mat_tendonSteelYieldStrength
+bridge:mat_tendonSteelYieldStrength rdf:type owl:DatatypeProperty ;
+                                    rdfs:comment """DATENTYP DES EINGABEWERTES:
+
+xsd:double [N/mm2]"""@de ,
+                                                 """TYPE INPUT VALUE:
+
+xsd:double [N/mm2]"""@en ;
+                                    rdfs:label "Streckgrenze des Spanngliedsstahles"@de ,
+                                               "Yield strength of tendon steel"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#struct_bearingsConceptOfSuperstructure
+bridge:struct_bearingsConceptOfSuperstructure rdf:type owl:DatatypeProperty ,
+                                                       owl:FunctionalProperty ;
+                                              rdfs:domain bridge:Bridge ;
+                                              rdfs:comment """ENUMERATION VALUES:
+
+GIRDER_BRIDGE
+FRAME_BRIDGE
+SUSPENSION_BRIDGE
+CABLE_STAYED_BRIDGE
+ARCH_BRIDGE
+TRUSS_BRIDGE
+USERDEFINED"""@en ,
+                                                           """WERTEVERZEICHNIS:
+
+BALKENBRUECKE
+RAHMENBRUECKE
+HAENGEBRUECKE
+SCHRAEGSEILBRUECKE
+BOGENBRUECKE
+FACHWERKBRUECKE
+BENUTZERDEFINIERT"""@de ;
+                                              rdfs:label "Bearings concept of the superstructure"@en ,
+                                                         "Tragprinzip des Ueberbaus"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#struct_bridgeFunctionType
+bridge:struct_bridgeFunctionType rdf:type owl:DatatypeProperty ;
+                                 rdfs:domain bridge:Bridge ;
+                                 rdfs:comment """ENUMERATION VALUES:
+
+PEDESTRIAN
+RAILWAY
+CAR_TRAFFIC
+CANAL
+USERDEFINED"""@en ,
+                                              """WERTEVERZEICHNIS:
+
+FUSSGAENGER
+EISENBAHN
+AUTOVERKEHR
+KANAL
+BENUTZERDEFINIERT"""@de ;
+                                 rdfs:label "Bridge type depending on use"@en ,
+                                            "Brueckentyp nach der Funktion"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#struct_extremeEnvironmentalLoads
+bridge:struct_extremeEnvironmentalLoads rdf:type owl:DatatypeProperty ;
+                                        rdfs:domain bridge:Bridge ;
+                                        rdfs:comment """ENUMERATION VALUES:
+
+EARTHQUAKE
+TSUNAMI
+NO"""@en ,
+                                                     """WERTEVERZEICHNIS:
+
+ERDBEBEN
+TSUNAMI
+KEINE"""@de ;
+                                        rdfs:label "Aussergewoehnliche Lasten"@de ,
+                                                   "Extreme environmental loads"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#struct_loadCase
+bridge:struct_loadCase rdf:type owl:DatatypeProperty ;
+                       rdfs:domain bridge:Bridge ;
+                       rdfs:comment """DATA TYPE INPUT VALUE:
+
+xsd:string"""@en ,
+                                    """DATENTYP DES EINGABEWERTES:
+
+xsd:string"""@de ;
+                       rdfs:label "Lastmodell"@de ,
+                                  "Load case"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#struct_numberSpans
+bridge:struct_numberSpans rdf:type owl:DatatypeProperty ;
+                          rdfs:domain bridge:Bridge ;
+                          rdfs:comment """DATA TYPE INPUT VALUE:
+
+xsd:nonNegativeInteger"""@en ,
+                                       """DATENTYP DES EINGABEWERTES:
+
+xsd:nonNegativeInteger"""@de ;
+                          rdfs:label "Anzahl von Brueckenfeldern"@de ,
+                                     "Number of bridge spans"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#struct_preservationOrder
+bridge:struct_preservationOrder rdf:type owl:DatatypeProperty ,
+                                         owl:FunctionalProperty ;
+                                rdfs:domain bridge:Bridge ;
+                                rdfs:comment """ENUMERATION VALUES:
+
+YES
+NO
+UNDEFINED"""@en ,
+                                             """WERTEVERZEICHNIS:
+
+JA
+NEIN
+NICHT_DEFINIERT"""@de ;
+                                rdfs:label "Denkmalschutz"@de ,
+                                           "Preservation order"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#struct_trafficType
+bridge:struct_trafficType rdf:type owl:DatatypeProperty ;
+                          rdfs:domain bridge:Bridge ;
+                          rdfs:comment """ENUMERATION VALUES:
+
+PEDESTRIAN
+HEAVY
+HIGHWAY
+FREIGHT
+RAILWAY
+MIXED
+MILITARY
+USERDEFINED"""@en ,
+                                       """WERTEVERZEICHNIS:
+
+FUSSGAENGER
+SCHWERLAST
+AUTOBAHN
+GUETER
+EISENBAHN
+GEMISCHT
+MILITAER
+BENUTZERDEFINIERT"""@de ;
+                          rdfs:label "Traffic type"@en ,
+                                     "Typ des Verkehrs"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#struct_yearOfConstruction
+bridge:struct_yearOfConstruction rdf:type owl:DatatypeProperty ,
+                                          owl:FunctionalProperty ;
+                                 rdfs:domain bridge:Bridge ;
+                                 rdfs:comment """DATA TYPE INPUT VALUE:
+
+xsd:nonNegativeInteger"""@en ,
+                                              """DATENTYP DES EINGABEWERTES:
+
+xsd:nonNegativeInteger"""@de ;
+                                 rdfs:label "Baujahr der Bruecke"@de ,
+                                            "Construction year of the bridge"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/rules#struct_location
+<http://www.semanticweb.org/taras.kozak/rules#struct_location> rdf:type owl:DatatypeProperty ;
+                                                               rdfs:comment """ENUMERATION VALUES:
+
+SALT_WATER
+SALTY_AIR
+DRY_LAND
+USERDEFINED""" ,
+                                                                            """WERTEVERZEICHNIS:
+
+SALZWASSER
+SALZHAFTIGE_LUFT
+FESTLAND
+BENUTZERDEFINIERT"""@de ;
+                                                               rdfs:label "Lage des Bruecke"@de ,
+                                                                          "Location of the bridge"@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/taras.kozak/bridge#AbutmentBackWall
+bridge:AbutmentBackWall rdf:type owl:Class ;
+                        rdfs:subClassOf bridge:AbutmentElement ,
+                                        [ rdf:type owl:Restriction ;
+                                          owl:onProperty bridge:isSubElementOf ;
+                                          owl:someValuesFrom bridge:AbutmentElement
+                                        ] ;
+                        rdfs:label "Back wall of an abutment"@en ,
+                                   "Kammerwand eines Widerlagers"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#AbutmentElement
+bridge:AbutmentElement rdf:type owl:Class ;
+                       rdfs:subClassOf bridge:SubstructureElement ;
+                       rdfs:comment "Diese Klasse kann auch fuer den gesamten Widerlager benutzt werden, der mit dem Vereinfachungsziel zu einem einzigen Element vereinigt wurde und nicht auf Unterelemente geteilt wurde."@de ,
+                                    "The class can be also used for a whole abutment, which because of the complexity (or by simplification aim) have been merged to a single element and haven't been separated to subelements."@en ;
+                       rdfs:label "Abutment element"@en ,
+                                  "Widerlagerelement"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#AbutmentElementUserdefined
+bridge:AbutmentElementUserdefined rdf:type owl:Class ;
+                                  rdfs:subClassOf bridge:AbutmentElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#AbutmentFooting
+bridge:AbutmentFooting rdf:type owl:Class ;
+                       rdfs:subClassOf bridge:AbutmentElement ;
+                       rdfs:label "Footing of an abutment"@en ,
+                                  "Fundamentplatte eines Widerlagers"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#AbutmentHeadWall
+bridge:AbutmentHeadWall rdf:type owl:Class ;
+                        rdfs:subClassOf bridge:AbutmentElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#AbutmentWingWall
+bridge:AbutmentWingWall rdf:type owl:Class ;
+                        rdfs:subClassOf bridge:AbutmentElement ;
+                        rdfs:label "Fluegelwand eines Widerlagers"@de ,
+                                   "Wing wall of an abutment"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ArbitraryZone
+bridge:ArbitraryZone rdf:type owl:Class ;
+                     rdfs:subClassOf bridge:SpatialZone ;
+                     rdfs:label "A random zone of a bridge: i.e. tower + footing + adjacent segments of the bridge deck."@en ,
+                                "Eine beliebige Zone der Bruecke. Z.B. Pylon + Gruendung + ankommende Segmente des Brueckendecks"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ArchElement
+bridge:ArchElement rdf:type owl:Class ;
+                   rdfs:subClassOf bridge:LoadBearingElement ;
+                   rdfs:label "Arch element"@en ,
+                              "Bogenelement"@de ,
+                              "Element einer Bogenkonstruktion"@de ,
+                              "Element of the arch construction"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ArchSegment
+bridge:ArchSegment rdf:type owl:Class ;
+                   rdfs:subClassOf bridge:Segment .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Axis
+bridge:Axis rdf:type owl:Class ;
+            rdfs:label "Achse"@de ,
+                       "Axis"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Bearing
+bridge:Bearing rdf:type owl:Class ;
+               rdfs:subClassOf bridge:SubstructureElement ;
+               rdfs:label "Bearings"@en ,
+                          "Lager"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BearingSeat
+bridge:BearingSeat rdf:type owl:Class ;
+                   rdfs:subClassOf bridge:SubstructureElement ;
+                   rdfs:label "Bearing seat"@en ,
+                              "Lagersockel"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BirdsProtection
+bridge:BirdsProtection rdf:type owl:Class ;
+                       rdfs:subClassOf bridge:FinishingElement ;
+                       rdfs:label "Birds protection"@en ,
+                                  "Vogelschutz"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Bridge
+bridge:Bridge rdf:type owl:Class ;
+              rdfs:subClassOf bridge:SpatialZone ;
+              rdfs:label "Bridge"@en ,
+                         "Bruecke"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Cable
+bridge:Cable rdf:type owl:Class ;
+             rdfs:subClassOf bridge:CableConstructionElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CableAnchoringDevice
+bridge:CableAnchoringDevice rdf:type owl:Class ;
+                            rdfs:subClassOf bridge:CableConstructionElement ;
+                            rdfs:label "Cable anchoring device"@en ,
+                                       "Seilverankerung"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CableConstructionElement
+bridge:CableConstructionElement rdf:type owl:Class ;
+                                rdfs:subClassOf bridge:SuperstructureElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Cap
+bridge:Cap rdf:type owl:Class ;
+           rdfs:subClassOf bridge:FinishingElement ;
+           rdfs:label "Cap"@en ,
+                      "Kappe"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Column
+bridge:Column rdf:type owl:Class ;
+              rdfs:subClassOf bridge:SubstructureElement ;
+              rdfs:label "Column"@en ,
+                         "Stuetze"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ConcreteStayTensionElement
+bridge:ConcreteStayTensionElement rdf:type owl:Class ;
+                                  rdfs:subClassOf bridge:SuperstructureElement ;
+                                  rdfs:label "Tension element as a concrete stay"@en ,
+                                             "Zugglieder aus Stahlbeton"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ConstructionJoint
+bridge:ConstructionJoint rdf:type owl:Class ;
+                         rdfs:subClassOf bridge:Joint ;
+                         rdfs:label "Arbeitsfuge"@de ,
+                                    "Construction joint"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CouplingJoint
+bridge:CouplingJoint rdf:type owl:Class ;
+                     rdfs:subClassOf bridge:Joint ;
+                     rdfs:label "Coupling joint"@en ,
+                                "Koppelfuge"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Deviator
+bridge:Deviator rdf:type owl:Class ;
+                rdfs:subClassOf bridge:PrestressingElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#DiscBearing
+bridge:DiscBearing rdf:type owl:Class ;
+                   rdfs:subClassOf bridge:Bearing ;
+                   rdfs:label "Disc bearings"@en ,
+                              "Scheibenlager"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Drainage
+bridge:Drainage rdf:type owl:Class ;
+                rdfs:subClassOf bridge:FinishingElement ;
+                rdfs:label "Drainage"@en ,
+                           "Entwaesserung"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ElastomericBearing
+bridge:ElastomericBearing rdf:type owl:Class ;
+                          rdfs:subClassOf bridge:Bearing ;
+                          rdfs:label "Elastomeric bearings"@en ,
+                                     "Elastomerlager"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ElectricalElement
+bridge:ElectricalElement rdf:type owl:Class ;
+                         rdfs:subClassOf bridge:FinishingElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Element
+bridge:Element rdf:type owl:Class ;
+               rdfs:label "Brueckenelement"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ExpansionJoint
+bridge:ExpansionJoint rdf:type owl:Class ;
+                      rdfs:subClassOf bridge:Joint ;
+                      rdfs:label "Dehnungs-/Bewegungsfuge"@de ,
+                                 "Expansion/movement joint"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#FinishingElement
+bridge:FinishingElement rdf:type owl:Class ;
+                        rdfs:subClassOf bridge:Element .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Footing
+bridge:Footing rdf:type owl:Class ;
+               rdfs:subClassOf bridge:FoundationElement ;
+               rdfs:label "Footing"@en ,
+                          "Gruendung"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#FoundationElement
+bridge:FoundationElement rdf:type owl:Class ;
+                         rdfs:subClassOf bridge:SubstructureElement ;
+                         rdfs:label "Foundation element of a bridge"@en ,
+                                    "Gruendungselement einer Bruecke"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GirderBracing
+bridge:GirderBracing rdf:type owl:Class ;
+                     rdfs:subClassOf bridge:GirderElement ;
+                     rdfs:label "Aussteifung (stabfoermiges Element)"@de ,
+                                "Bracing (bar-shaped element)"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GirderDeck
+bridge:GirderDeck rdf:type owl:Class ;
+                  rdfs:subClassOf bridge:GirderElement ;
+                  rdfs:label "Deck (upper plate of the bridge beam cross-section)"@en ,
+                             "Obere Platte des Brueckendeckquerschnitts"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GirderDiaphragm
+bridge:GirderDiaphragm rdf:type owl:Class ;
+                       rdfs:subClassOf bridge:GirderElement ;
+                       rdfs:label "Stiffening diaphgragm (plate-shaped element)"@en ,
+                                  "Versteifungsdiaphragma (plattenfoermiges Element)"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GirderDownPlate
+bridge:GirderDownPlate rdf:type owl:Class ;
+                       rdfs:subClassOf bridge:GirderElement ;
+                       rdfs:label "Down plate of the bridge beam cross-section"@en ,
+                                  "Untere Platte des Brueckendeckquerschnitts"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GirderElement
+bridge:GirderElement rdf:type owl:Class ;
+                     rdfs:subClassOf bridge:SuperstructureElement ;
+                     rdfs:label "Bridge girder"@en ,
+                                "Brueckendeck Element"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GirderMainGirder
+bridge:GirderMainGirder rdf:type owl:Class ;
+                        rdfs:subClassOf bridge:GirderElement ;
+                        rdfs:comment "Main girder (girder in longitudinal direction of the bridge beam cross-section)" ;
+                        rdfs:label "Laengsbalken (Balken in der Laengsrichtung des Brueckendecksquerschnitts)"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GirderSecondaryGirder
+bridge:GirderSecondaryGirder rdf:type owl:Class ;
+                             rdfs:subClassOf bridge:GirderElement ;
+                             rdfs:label """Als Nebentraeger kann ein Hilfsbalken definiert, der ueber keine Haupttragfunktion (sondern ueber eine Hilfstragfunktion)  im Brueckendeck verfuegt.
+(z. B. Querbalken)"""@de ,
+                                        "As secondary girder can be defined a additional girder, which hasn't the main  bearing function (but secondary) of the bridge beam. (i.e. cross girder)"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GirderSegment
+bridge:GirderSegment rdf:type owl:Class ;
+                     rdfs:subClassOf bridge:Segment .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GroundAnchoringDevice
+bridge:GroundAnchoringDevice rdf:type owl:Class ;
+                             rdfs:subClassOf bridge:SubstructureElement ;
+                             rdfs:label "Erdverankerung"@de ,
+                                        "Ground anchoring device"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#HorizontalForceBearing
+bridge:HorizontalForceBearing rdf:type owl:Class ;
+                              rdfs:subClassOf bridge:Bearing ;
+                              rdfs:label "Horizontal force bearings"@en ,
+                                         "Horizontalkraftlager"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Joint
+bridge:Joint rdf:type owl:Class ;
+             rdfs:subClassOf bridge:Element ;
+             rdfs:label "Fuge"@de ,
+                        "Joint"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Lighting
+bridge:Lighting rdf:type owl:Class ;
+                rdfs:subClassOf bridge:FinishingElement ;
+                rdfs:label "Beleuchtung"@de ,
+                           "Lighting"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#LoadBearingElement
+bridge:LoadBearingElement rdf:type owl:Class ;
+                          rdfs:subClassOf bridge:Element ;
+                          rdfs:label "Load bearing element of a bridge"@en ,
+                                     "Tragendes Element einer Bruecke"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#MemberUserdefined
+bridge:MemberUserdefined rdf:type owl:Class ;
+                         rdfs:subClassOf bridge:LoadBearingElement ;
+                         rdfs:label "Ein benutzerdefiniertes Element"@de ,
+                                    "Member userdefined"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#NoiseBarrier
+bridge:NoiseBarrier rdf:type owl:Class ;
+                    rdfs:subClassOf bridge:FinishingElement ;
+                    rdfs:label "Laermschutz"@de ,
+                               "Noise barrier"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Pavement
+bridge:Pavement rdf:type owl:Class ;
+                rdfs:subClassOf bridge:FinishingElement ;
+                rdfs:label "Fahrbahnbelag"@de ,
+                           "Pavement"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PierCap
+bridge:PierCap rdf:type owl:Class ;
+               rdfs:subClassOf bridge:PierElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PierElement
+bridge:PierElement rdf:type owl:Class ;
+                   rdfs:subClassOf bridge:SubstructureElement ;
+                   rdfs:label "Pfeilerelement"@de ,
+                              "Pier element"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PierSegment
+bridge:PierSegment rdf:type owl:Class ;
+                   rdfs:subClassOf bridge:Segment .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PierStem
+bridge:PierStem rdf:type owl:Class ;
+                rdfs:subClassOf bridge:PierElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Pile
+bridge:Pile rdf:type owl:Class ;
+            rdfs:subClassOf bridge:FoundationElement ;
+            rdfs:label "Pfahl"@de ,
+                       "Pile"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PotBearing
+bridge:PotBearing rdf:type owl:Class ;
+                  rdfs:subClassOf bridge:Bearing ;
+                  rdfs:label "Pot bearings"@en ,
+                             "Topflager"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PrestressingElement
+bridge:PrestressingElement rdf:type owl:Class ;
+                           rdfs:subClassOf bridge:SuperstructureElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Railing
+bridge:Railing rdf:type owl:Class ;
+               rdfs:subClassOf bridge:FinishingElement ;
+               rdfs:label "Gelaender"@de ,
+                          "Railing"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#RebarArray
+bridge:RebarArray rdf:type owl:Class ;
+                  rdfs:subClassOf bridge:ReinforcingElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ReinforcingBar
+bridge:ReinforcingBar rdf:type owl:Class ;
+                      rdfs:subClassOf bridge:ReinforcingElement ;
+                      rdfs:label "Bewehrungsstab"@de ,
+                                 "Reinforcing bar"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ReinforcingElement
+bridge:ReinforcingElement rdf:type owl:Class ;
+                          rdfs:subClassOf bridge:LoadBearingElement ;
+                          rdfs:label "Bewehrungselement bzw. Spannglied"@de ,
+                                     "Reinforcing element or tendon element"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ReinforcingMesh
+bridge:ReinforcingMesh rdf:type owl:Class ;
+                       rdfs:subClassOf bridge:ReinforcingElement ;
+                       rdfs:label "Bewehrungsmatte"@de ,
+                                  "Reinforcing mesh"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SchockAbsorberElement
+bridge:SchockAbsorberElement rdf:type owl:Class ;
+                             rdfs:subClassOf bridge:Element .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Segment
+bridge:Segment rdf:type owl:Class ;
+               rdfs:subClassOf bridge:SpatialZone .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Site
+bridge:Site rdf:type owl:Class ;
+            rdfs:subClassOf bridge:SpatialZone ;
+            rdfs:label "Gelaende"@de ,
+                       "Site"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SlidingBearing
+bridge:SlidingBearing rdf:type owl:Class ;
+                      rdfs:subClassOf bridge:Bearing ;
+                      rdfs:label "Gleitlager"@de ,
+                                 "Sliding bearings"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Span
+bridge:Span rdf:type owl:Class ;
+            rdfs:subClassOf bridge:SpatialZone ;
+            rdfs:label "Feld"@de ,
+                       "Span"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SpatialZone
+bridge:SpatialZone rdf:type owl:Class ;
+                   rdfs:label "Raeumliche Zone in einem Brueckenbauwerk"@de ,
+                              "Spatial zone in a bridge construction"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SphericalBearing
+bridge:SphericalBearing rdf:type owl:Class ;
+                        rdfs:subClassOf bridge:Bearing ;
+                        rdfs:label "Kalottenlager"@de ,
+                                   "Spherical bearings"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Substructure
+bridge:Substructure rdf:type owl:Class ;
+                    rdfs:subClassOf bridge:SpatialZone ;
+                    rdfs:label "Substructure (zone)"@en ,
+                               "Unterbau"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SubstructureElement
+bridge:SubstructureElement rdf:type owl:Class ;
+                           rdfs:subClassOf bridge:LoadBearingElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#Superstructure
+bridge:Superstructure rdf:type owl:Class ;
+                      rdfs:subClassOf bridge:SpatialZone ;
+                      rdfs:label "Superstructure"@en ,
+                                 "Ueberbau"@de .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SuperstructureElement
+bridge:SuperstructureElement rdf:type owl:Class ;
+                             rdfs:subClassOf bridge:LoadBearingElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#TendonAnchoringDevice
+bridge:TendonAnchoringDevice rdf:type owl:Class ;
+                             rdfs:subClassOf bridge:PrestressingElement ;
+                             rdfs:label "Spanngliedverankerung"@de ,
+                                        "Tendon anchoring device"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#TendonExternal
+bridge:TendonExternal rdf:type owl:Class ;
+                      rdfs:subClassOf bridge:PrestressingElement .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#TendonInternal
+bridge:TendonInternal rdf:type owl:Class ;
+                      rdfs:subClassOf bridge:PrestressingElement ;
+                      rdfs:label "Spannglied"@de ,
+                                 "Tendon"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#TowerElement
+bridge:TowerElement rdf:type owl:Class ;
+                    rdfs:subClassOf bridge:LoadBearingElement ;
+                    rdfs:label "Pylonelement"@de ,
+                               "Tower/pylon element"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#TowerSegment
+bridge:TowerSegment rdf:type owl:Class ;
+                    rdfs:subClassOf bridge:Segment .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#TrafficBarrier
+bridge:TrafficBarrier rdf:type owl:Class ;
+                      rdfs:subClassOf bridge:FinishingElement ;
+                      rdfs:label "Leiteinrichtung"@de ,
+                                 "Traffic barrier"@en .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#UserdefinedBearing
+bridge:UserdefinedBearing rdf:type owl:Class ;
+                          rdfs:subClassOf bridge:Bearing ;
+                          rdfs:label "Benutzerdefiniertes Lager"@de ,
+                                     "Userdefined bearings"@en .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/taras.kozak/bridge#A
+bridge:A rdf:type owl:NamedIndividual ;
+         bridge:bears bridge:B .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ABUTMENT_13
+bridge:ABUTMENT_13 rdf:type owl:NamedIndividual ,
+                            bridge:AbutmentElement ;
+                   bridge:hasAxis bridge:AXIS_13 ;
+                   bridge:hasSubElement bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ,
+                                        bridge:ABUTMENT_SUBELEMENT_HEADWALL_13 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ABUTMENT_15
+bridge:ABUTMENT_15 rdf:type owl:NamedIndividual ,
+                            bridge:AbutmentElement ;
+                   bridge:hasAxis bridge:AXIS_15 ;
+                   bridge:hasSubElement bridge:ABUTMENT_SUBELEMENT_15 ,
+                                        bridge:ABUTMENT_SUBELEMENT_FOOTING_15 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ABUTMENT_SUBELEMENT_15
+bridge:ABUTMENT_SUBELEMENT_15 rdf:type owl:NamedIndividual ,
+                                       bridge:AbutmentElementUserdefined ;
+                              bridge:bears bridge:BEARING_15_1 ,
+                                           bridge:BEARING_15_2 ,
+                                           bridge:BEARING_15_3 ;
+                              bridge:elem_concreteCover 35 ;
+                              bridge:mat_expositionClassReinforcementXC "XC4" ;
+                              rdfs:label "ABUTMENT_ELEMENT_15" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ABUTMENT_SUBELEMENT_FOOTING_13
+bridge:ABUTMENT_SUBELEMENT_FOOTING_13 rdf:type owl:NamedIndividual ,
+                                               bridge:AbutmentFooting ;
+                                      bridge:bears bridge:ABUTMENT_SUBELEMENT_HEADWALL_13 ;
+                                      bridge:elem_concreteCover 35 ;
+                                      bridge:mat_expositionClassReinforcementXC "XC4" ;
+                                      rdfs:label "ABUTMENT_FOOTING_13" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ABUTMENT_SUBELEMENT_FOOTING_15
+bridge:ABUTMENT_SUBELEMENT_FOOTING_15 rdf:type owl:NamedIndividual ,
+                                               bridge:AbutmentFooting ;
+                                      bridge:bears bridge:ABUTMENT_SUBELEMENT_15 ;
+                                      bridge:elem_concreteCover 35 ;
+                                      bridge:mat_expositionClassReinforcementXC "XC4" ;
+                                      rdfs:label "ABUTMENT_FOOTING_15" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#ABUTMENT_SUBELEMENT_HEADWALL_13
+bridge:ABUTMENT_SUBELEMENT_HEADWALL_13 rdf:type owl:NamedIndividual ,
+                                                bridge:AbutmentHeadWall ;
+                                       bridge:bears bridge:BEARING_13_1 ,
+                                                    bridge:BEARING_13_2 ;
+                                       bridge:elem_concreteCover 35 ;
+                                       bridge:mat_expositionClassReinforcementXC "XC4" ;
+                                       rdfs:label "ABUTMENT_BENCHING_13" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#AXIS_13
+bridge:AXIS_13 rdf:type owl:NamedIndividual ,
+                        bridge:Axis .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#AXIS_14
+bridge:AXIS_14 rdf:type owl:NamedIndividual ,
+                        bridge:Axis .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#AXIS_15
+bridge:AXIS_15 rdf:type owl:NamedIndividual ,
+                        bridge:Axis .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#B
+bridge:B rdf:type owl:NamedIndividual ;
+         bridge:bears bridge:C .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEARING_13_1
+bridge:BEARING_13_1 rdf:type owl:NamedIndividual ,
+                             bridge:PotBearing ;
+                    bridge:bears bridge:GIRDER_COMPLETE_AS_ELEMENT ;
+                    bridge:hasAxis bridge:AXIS_13 ;
+                    bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_FEST" ;
+                    bridge:elem_elementDescription "NGa_100" ;
+                    bridge:elem_yearOfInstallation 1973 ;
+                    rdfs:label "BEARINGS_13_1" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEARING_13_2
+bridge:BEARING_13_2 rdf:type owl:NamedIndividual ,
+                             bridge:PotBearing ;
+                    bridge:bears bridge:GIRDER_COMPLETE_AS_ELEMENT ;
+                    bridge:hasAxis bridge:AXIS_13 ;
+                    bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_Y_FEST bzw. Z_X_FEST" ;
+                    bridge:elem_elementDescription "NGe_200" ;
+                    bridge:elem_yearOfInstallation 1973 ;
+                    rdfs:label "BEARINGS_13_2" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEARING_14_1
+bridge:BEARING_14_1 rdf:type owl:NamedIndividual ,
+                             bridge:PotBearing ;
+                    bridge:bears bridge:GIRDER_COMPLETE_AS_ELEMENT ;
+                    bridge:hasAxis bridge:AXIS_14 ;
+                    bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_FEST" ;
+                    bridge:elem_elementDescription "NGa_200" ;
+                    bridge:elem_yearOfInstallation 1973 ;
+                    rdfs:label "BEARINGS_14_1" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEARING_14_2
+bridge:BEARING_14_2 rdf:type owl:NamedIndividual ,
+                             bridge:PotBearing ;
+                    bridge:bears bridge:GIRDER_COMPLETE_AS_ELEMENT ;
+                    bridge:hasAxis bridge:AXIS_14 ;
+                    bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_FEST" ;
+                    bridge:elem_elementDescription "NGa_150" ;
+                    bridge:elem_yearOfInstallation 1973 ;
+                    rdfs:label "BEARINGS_14_2" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEARING_14_3
+bridge:BEARING_14_3 rdf:type owl:NamedIndividual ,
+                             bridge:PotBearing ;
+                    bridge:bears bridge:GIRDER_COMPLETE_AS_ELEMENT ;
+                    bridge:hasAxis bridge:AXIS_14 ;
+                    bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_FEST" ;
+                    bridge:elem_elementDescription "NGa_150" ;
+                    bridge:elem_yearOfInstallation 1973 ;
+                    rdfs:label "BEARINGS_14_3" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEARING_15_1
+bridge:BEARING_15_1 rdf:type owl:NamedIndividual ,
+                             bridge:PotBearing ;
+                    bridge:bears bridge:GIRDER_COMPLETE_AS_ELEMENT ;
+                    bridge:hasAxis bridge:AXIS_15 ;
+                    bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_FEST" ;
+                    bridge:elem_elementDescription "NGa 200" ;
+                    bridge:elem_yearOfInstallation 1973 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEARING_15_2
+bridge:BEARING_15_2 rdf:type owl:NamedIndividual ,
+                             bridge:PotBearing ;
+                    bridge:bears bridge:GIRDER_COMPLETE_AS_ELEMENT ;
+                    bridge:hasAxis bridge:AXIS_15 ;
+                    bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_FEST" ;
+                    bridge:elem_elementDescription "NGa 200" ;
+                    bridge:elem_yearOfInstallation 1973 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEARING_15_3
+bridge:BEARING_15_3 rdf:type owl:NamedIndividual ,
+                             bridge:PotBearing ;
+                    bridge:bears bridge:GIRDER_COMPLETE_AS_ELEMENT ;
+                    bridge:hasAxis bridge:AXIS_15 ;
+                    bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_Y_FEST" ;
+                    bridge:elem_elementDescription "NGa 150" ;
+                    bridge:elem_yearOfInstallation 1973 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEWEHRUNGSSTAB_1
+bridge:BEWEHRUNGSSTAB_1 rdf:type owl:NamedIndividual ,
+                                 bridge:ReinforcingBar .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BEWEHRUNGSSTAB_2
+bridge:BEWEHRUNGSSTAB_2 rdf:type owl:NamedIndividual ,
+                                 bridge:ReinforcingBar .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#BRIDGE
+bridge:BRIDGE rdf:type owl:NamedIndividual ,
+                       bridge:Bridge ;
+              bridge:contains bridge:SUBSTRUCTURE ,
+                              bridge:SUPERSTRUCTURE ;
+              bridge:struct_bearingsConceptOfSuperstructure "GIRDER_BRIDGE"@en ;
+              bridge:struct_bridgeFunctionType "CAR_TRAFFIC"@en ;
+              bridge:struct_extremeEnvironmentalLoads "NO"@en ;
+              bridge:struct_preservationOrder "NO" ;
+              bridge:struct_trafficType "HIGHWAY; PEDESTRIAN"@en ;
+              bridge:struct_yearOfConstruction 1973 ;
+              <http://www.semanticweb.org/taras.kozak/rules#struct_location> "SALTY_AIR"^^xsd:string .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#C
+bridge:C rdf:type owl:NamedIndividual ;
+         bridge:bears bridge:D .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_1_1
+bridge:CAP_1_1 rdf:type owl:NamedIndividual ,
+                        bridge:Cap ;
+               bridge:elem_yearOfInstallation 1995 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_1_2
+bridge:CAP_1_2 rdf:type owl:NamedIndividual ,
+                        bridge:Cap ;
+               bridge:elem_yearOfInstallation 1996 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_2_1
+bridge:CAP_2_1 rdf:type owl:NamedIndividual ,
+                        bridge:Cap ;
+               bridge:elem_yearOfInstallation 1997 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_2_2
+bridge:CAP_2_2 rdf:type owl:NamedIndividual ,
+                        bridge:Cap ;
+               bridge:elem_yearOfInstallation 2000 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_3_1
+bridge:CAP_3_1 rdf:type owl:NamedIndividual ,
+                        bridge:Cap .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_3_2
+bridge:CAP_3_2 rdf:type owl:NamedIndividual ,
+                        bridge:Cap .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_4_1
+bridge:CAP_4_1 rdf:type owl:NamedIndividual ,
+                        bridge:Cap .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_4_2
+bridge:CAP_4_2 rdf:type owl:NamedIndividual ,
+                        bridge:Cap .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_5_1
+bridge:CAP_5_1 rdf:type owl:NamedIndividual ,
+                        bridge:Cap .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_5_2
+bridge:CAP_5_2 rdf:type owl:NamedIndividual ,
+                        bridge:Cap .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_6_1
+bridge:CAP_6_1 rdf:type owl:NamedIndividual ,
+                        bridge:Cap .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#CAP_6_2
+bridge:CAP_6_2 rdf:type owl:NamedIndividual ,
+                        bridge:Cap .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#COLUMN_14_1
+bridge:COLUMN_14_1 rdf:type owl:NamedIndividual ,
+                            bridge:Column ;
+                   bridge:bears bridge:BEARING_14_1 ;
+                   bridge:mat_expositionClassReinforcementXC "XC3" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#COLUMN_14_2
+bridge:COLUMN_14_2 rdf:type owl:NamedIndividual ,
+                            bridge:Column ;
+                   bridge:bears bridge:BEARING_14_2 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#COLUMN_14_3
+bridge:COLUMN_14_3 rdf:type owl:NamedIndividual ,
+                            bridge:Column ;
+                   bridge:bears bridge:BEARING_14_3 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#D
+bridge:D rdf:type owl:NamedIndividual .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#FOOTING_ELEMENT_14
+bridge:FOOTING_ELEMENT_14 rdf:type owl:NamedIndividual ,
+                                   bridge:Footing ;
+                          bridge:bears bridge:COLUMN_14_1 ,
+                                       bridge:COLUMN_14_2 ,
+                                       bridge:COLUMN_14_3 ;
+                          bridge:elem_concreteCover 3 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#FOUNDATION_13
+bridge:FOUNDATION_13 rdf:type owl:NamedIndividual ,
+                              bridge:FoundationElement ;
+                     bridge:hasAxis bridge:AXIS_13 ;
+                     bridge:hasSubElement bridge:PILE_13_1 ,
+                                          bridge:PILE_13_10 ,
+                                          bridge:PILE_13_11 ,
+                                          bridge:PILE_13_12 ,
+                                          bridge:PILE_13_13 ,
+                                          bridge:PILE_13_14 ,
+                                          bridge:PILE_13_15 ,
+                                          bridge:PILE_13_16 ,
+                                          bridge:PILE_13_17 ,
+                                          bridge:PILE_13_2 ,
+                                          bridge:PILE_13_3 ,
+                                          bridge:PILE_13_4 ,
+                                          bridge:PILE_13_5 ,
+                                          bridge:PILE_13_6 ,
+                                          bridge:PILE_13_7 ,
+                                          bridge:PILE_13_8 ,
+                                          bridge:PILE_13_9 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#FOUNDATION_14
+bridge:FOUNDATION_14 rdf:type owl:NamedIndividual ,
+                              bridge:FoundationElement ;
+                     bridge:hasAxis bridge:AXIS_14 ;
+                     bridge:hasSubElement bridge:FOOTING_ELEMENT_14 ,
+                                          bridge:PILE_14_1 ,
+                                          bridge:PILE_14_2 ,
+                                          bridge:PILE_14_3 ,
+                                          bridge:PILE_14_4 ,
+                                          bridge:PILE_14_5 ,
+                                          bridge:PILE_14_6 ,
+                                          bridge:PILE_14_7 ,
+                                          bridge:PILE_14_8 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#FOUNDATION_15
+bridge:FOUNDATION_15 rdf:type owl:NamedIndividual ,
+                              bridge:FoundationElement ;
+                     bridge:hasAxis bridge:AXIS_15 ;
+                     bridge:hasSubElement bridge:PILE_15_1 ,
+                                          bridge:PILE_15_10 ,
+                                          bridge:PILE_15_11 ,
+                                          bridge:PILE_15_12 ,
+                                          bridge:PILE_15_2 ,
+                                          bridge:PILE_15_3 ,
+                                          bridge:PILE_15_4 ,
+                                          bridge:PILE_15_5 ,
+                                          bridge:PILE_15_6 ,
+                                          bridge:PILE_15_7 ,
+                                          bridge:PILE_15_8 ,
+                                          bridge:PILE_15_9 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_COMPLETE_AS_ELEMENT
+bridge:GIRDER_COMPLETE_AS_ELEMENT rdf:type owl:NamedIndividual ,
+                                           bridge:GirderElement ;
+                                  bridge:hasSubElement bridge:GIRDER_DECK_1 ,
+                                                       bridge:GIRDER_DECK_2 ,
+                                                       bridge:GIRDER_DECK_3 ,
+                                                       bridge:GIRDER_DECK_4 ,
+                                                       bridge:GIRDER_DECK_5 ,
+                                                       bridge:GIRDER_DECK_6 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_COMPLETE_AS_ZONE
+bridge:GIRDER_COMPLETE_AS_ZONE rdf:type owl:NamedIndividual ,
+                                        bridge:ArbitraryZone ;
+                               bridge:contains bridge:SPAN_1_AXIS_15_14 ,
+                                               bridge:SPAN_2_AXIS_14_13 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_DECK_1
+bridge:GIRDER_DECK_1 rdf:type owl:NamedIndividual ,
+                              bridge:GirderDeck .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_DECK_2
+bridge:GIRDER_DECK_2 rdf:type owl:NamedIndividual ,
+                              bridge:GirderDeck .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_DECK_3
+bridge:GIRDER_DECK_3 rdf:type owl:NamedIndividual ,
+                              bridge:GirderDeck .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_DECK_4
+bridge:GIRDER_DECK_4 rdf:type owl:NamedIndividual ,
+                              bridge:GirderDeck .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_DECK_5
+bridge:GIRDER_DECK_5 rdf:type owl:NamedIndividual ,
+                              bridge:GirderDeck .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_DECK_6
+bridge:GIRDER_DECK_6 rdf:type owl:NamedIndividual ,
+                              bridge:GirderDeck .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_SEGMENT_1
+bridge:GIRDER_SEGMENT_1 rdf:type owl:NamedIndividual ,
+                                 bridge:GirderSegment ;
+                        bridge:contains bridge:CAP_1_1 ,
+                                        bridge:CAP_1_2 ,
+                                        bridge:GIRDER_DECK_1 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_SEGMENT_2
+bridge:GIRDER_SEGMENT_2 rdf:type owl:NamedIndividual ,
+                                 bridge:GirderSegment ;
+                        bridge:contains bridge:CAP_2_1 ,
+                                        bridge:CAP_2_2 ,
+                                        bridge:GIRDER_SEGMENT_2 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_SEGMENT_3
+bridge:GIRDER_SEGMENT_3 rdf:type owl:NamedIndividual ,
+                                 bridge:GirderSegment ;
+                        bridge:contains bridge:CAP_3_1 ,
+                                        bridge:CAP_3_2 ,
+                                        bridge:GIRDER_SEGMENT_3 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_SEGMENT_4
+bridge:GIRDER_SEGMENT_4 rdf:type owl:NamedIndividual ,
+                                 bridge:GirderSegment ;
+                        bridge:contains bridge:CAP_4_1 ,
+                                        bridge:CAP_4_2 ,
+                                        bridge:GIRDER_SEGMENT_4 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_SEGMENT_5
+bridge:GIRDER_SEGMENT_5 rdf:type owl:NamedIndividual ,
+                                 bridge:GirderSegment ;
+                        bridge:contains bridge:CAP_5_1 ,
+                                        bridge:CAP_5_2 ,
+                                        bridge:GIRDER_SEGMENT_5 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#GIRDER_SEGMENT_6
+bridge:GIRDER_SEGMENT_6 rdf:type owl:NamedIndividual ,
+                                 bridge:GirderSegment ;
+                        bridge:contains bridge:CAP_6_1 ,
+                                        bridge:CAP_6_2 ,
+                                        bridge:GIRDER_SEGMENT_6 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PAVEMENT
+bridge:PAVEMENT rdf:type owl:NamedIndividual ,
+                         bridge:Pavement ;
+                bridge:restOn bridge:GIRDER_COMPLETE_AS_ELEMENT .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_1
+bridge:PILE_13_1 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                 bridge:isReinforcedWith bridge:BEWEHRUNGSSTAB_1 ,
+                                         bridge:BEWEHRUNGSSTAB_2 ;
+                 bridge:elem_concreteCoverAllSides 35 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25" ;
+                 rdfs:label "PILE_13_1" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_10
+bridge:PILE_13_10 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_13_10" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_11
+bridge:PILE_13_11 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_13_11" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_12
+bridge:PILE_13_12 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_13_12" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_13
+bridge:PILE_13_13 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_13_13" ,
+                             "PILE_13_3" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_14
+bridge:PILE_13_14 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_13_14" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_15
+bridge:PILE_13_15 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_13_15" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_16
+bridge:PILE_13_16 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_13_16" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_17
+bridge:PILE_13_17 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_13_17" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_2
+bridge:PILE_13_2 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_3
+bridge:PILE_13_3 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                 bridge:elem_bearingsDegreeOfFreedomDisplacement "X_Y_Z_FEST" ;
+                 bridge:elem_elementDescription "N_200" ;
+                 bridge:elem_manufacturer "GHH_Gutehoffnungshuette_Sterkrade_Oberhausen" ;
+                 rdfs:label "BEARINGS_13_3" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_4
+bridge:PILE_13_4 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_13_4" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_5
+bridge:PILE_13_5 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_13_5" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_6
+bridge:PILE_13_6 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:comment "PILE_13_6" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_7
+bridge:PILE_13_7 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_13_7" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_8
+bridge:PILE_13_8 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_13_8" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_13_9
+bridge:PILE_13_9 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_13 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 bridge:mat_expositionClassReinforcementXC "XC3" ;
+                 rdfs:label "PILE_13_9" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_14_1
+bridge:PILE_14_1 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:FOOTING_ELEMENT_14 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_14_2
+bridge:PILE_14_2 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:FOOTING_ELEMENT_14 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_14_3
+bridge:PILE_14_3 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:FOOTING_ELEMENT_14 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_14_4
+bridge:PILE_14_4 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:FOOTING_ELEMENT_14 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_14_5
+bridge:PILE_14_5 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:FOOTING_ELEMENT_14 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_14_6
+bridge:PILE_14_6 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:FOOTING_ELEMENT_14 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_14_7
+bridge:PILE_14_7 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:FOOTING_ELEMENT_14 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_14_8
+bridge:PILE_14_8 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:FOOTING_ELEMENT_14 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_1
+bridge:PILE_15_1 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                 bridge:hasAxis bridge:AXIS_15 ;
+                 bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_FEST" ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:elem_elementDescription "NGa_100" ;
+                 bridge:elem_manufacturer "GHH_Gutehoffnungshuette_Sterkrade_Oberhausen" ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "BEARINGS_15_1" ,
+                            "PILE_15_1" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_10
+bridge:PILE_15_10 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_15_10" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_11
+bridge:PILE_15_11 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_15_11" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_12
+bridge:PILE_15_12 rdf:type owl:NamedIndividual ,
+                           bridge:Pile ;
+                  bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                  bridge:elem_concreteCoverAllSides 30 ;
+                  bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                  rdfs:label "PILE_15_12" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_2
+bridge:PILE_15_2 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                 bridge:hasAxis bridge:AXIS_15 ;
+                 bridge:elem_bearingsDegreeOfFreedomDisplacement "Z_FEST" ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:elem_elementDescription "NGa_100" ;
+                 bridge:elem_manufacturer "GHH_Gutehoffnungshuette_Sterkrade_Oberhausen" ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "BEARINGS_15_2" ,
+                            "PILE_15_2" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_3
+bridge:PILE_15_3 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_15_3" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_4
+bridge:PILE_15_4 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_15_4" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_5
+bridge:PILE_15_5 rdf:type owl:NamedIndividual ,
+                          bridge:Pile .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_6
+bridge:PILE_15_6 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_15_6" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_7
+bridge:PILE_15_7 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_15_7" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_8
+bridge:PILE_15_8 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_15_8" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#PILE_15_9
+bridge:PILE_15_9 rdf:type owl:NamedIndividual ,
+                          bridge:Pile ;
+                 bridge:bears bridge:ABUTMENT_SUBELEMENT_FOOTING_15 ;
+                 bridge:elem_concreteCoverAllSides 30 ;
+                 bridge:mat_concreteCompressionStrengthClass "C20/25"^^xsd:string ;
+                 rdfs:label "PILE_15_9" .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SITE
+bridge:SITE rdf:type owl:NamedIndividual ,
+                     bridge:Site ;
+            bridge:contains bridge:BRIDGE .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SPAN_1_AXIS_15_14
+bridge:SPAN_1_AXIS_15_14 rdf:type owl:NamedIndividual ,
+                                  bridge:Span ;
+                         bridge:contains bridge:GIRDER_SEGMENT_1 ,
+                                         bridge:GIRDER_SEGMENT_2 ,
+                                         bridge:GIRDER_SEGMENT_3 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SPAN_2_AXIS_14_13
+bridge:SPAN_2_AXIS_14_13 rdf:type owl:NamedIndividual ,
+                                  bridge:Span ;
+                         bridge:contains bridge:GIRDER_SEGMENT_4 ,
+                                         bridge:GIRDER_SEGMENT_5 ,
+                                         bridge:GIRDER_SEGMENT_6 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SUBSTRUCTURE
+bridge:SUBSTRUCTURE rdf:type owl:NamedIndividual ,
+                             bridge:Substructure ;
+                    bridge:contains bridge:ABUTMENT_13 ,
+                                    bridge:ABUTMENT_15 ,
+                                    bridge:BEARING_13_1 ,
+                                    bridge:BEARING_13_2 ,
+                                    bridge:BEARING_14_1 ,
+                                    bridge:BEARING_14_2 ,
+                                    bridge:BEARING_14_3 ,
+                                    bridge:BEARING_15_1 ,
+                                    bridge:BEARING_15_2 ,
+                                    bridge:BEARING_15_3 ,
+                                    bridge:FOUNDATION_13 ,
+                                    bridge:FOUNDATION_14 ,
+                                    bridge:FOUNDATION_15 .
+
+
+###  http://www.semanticweb.org/taras.kozak/bridge#SUPERSTRUCTURE
+bridge:SUPERSTRUCTURE rdf:type owl:NamedIndividual ,
+                               bridge:Superstructure ;
+                      bridge:contains bridge:GIRDER_COMPLETE_AS_ELEMENT .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+<http://www.semanticweb.org/taras/ontologies/2018/7/Bridge_Ontologie#struct_connectionOfSubAndSuperstructure> rdfs:label "Type of the bridge depending on connection of the substructure and superstructure"@en .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:Restriction ;
+  owl:onProperty bridge:bears ;
+  owl:someValuesFrom bridge:GirderElement ;
+  rdfs:subClassOf bridge:Bearing
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:ABUTMENT_13
+                        bridge:ABUTMENT_15
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:ABUTMENT_SUBELEMENT_FOOTING_13
+                        bridge:ABUTMENT_SUBELEMENT_FOOTING_15
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:AXIS_13
+                        bridge:AXIS_14
+                        bridge:AXIS_15
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:BEARING_13_1
+                        bridge:BEARING_13_2
+                        bridge:BEARING_14_1
+                        bridge:BEARING_14_2
+                        bridge:BEARING_14_3
+                        bridge:BEARING_15_1
+                        bridge:BEARING_15_2
+                        bridge:BEARING_15_3
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:CAP_1_1
+                        bridge:CAP_1_2
+                        bridge:CAP_2_1
+                        bridge:CAP_2_2
+                        bridge:CAP_3_1
+                        bridge:CAP_3_2
+                        bridge:CAP_4_1
+                        bridge:CAP_4_2
+                        bridge:CAP_5_1
+                        bridge:CAP_5_2
+                        bridge:CAP_6_1
+                        bridge:CAP_6_2
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:COLUMN_14_1
+                        bridge:COLUMN_14_2
+                        bridge:COLUMN_14_3
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:FOUNDATION_13
+                        bridge:FOUNDATION_14
+                        bridge:FOUNDATION_15
+                        bridge:GIRDER_COMPLETE_AS_ZONE
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:GIRDER_DECK_1
+                        bridge:GIRDER_DECK_2
+                        bridge:GIRDER_DECK_3
+                        bridge:GIRDER_DECK_4
+                        bridge:GIRDER_DECK_5
+                        bridge:GIRDER_DECK_6
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:GIRDER_SEGMENT_1
+                        bridge:GIRDER_SEGMENT_2
+                        bridge:GIRDER_SEGMENT_3
+                        bridge:GIRDER_SEGMENT_4
+                        bridge:GIRDER_SEGMENT_5
+                        bridge:GIRDER_SEGMENT_6
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:PILE_13_1
+                        bridge:PILE_13_10
+                        bridge:PILE_13_11
+                        bridge:PILE_13_12
+                        bridge:PILE_13_13
+                        bridge:PILE_13_14
+                        bridge:PILE_13_15
+                        bridge:PILE_13_16
+                        bridge:PILE_13_17
+                        bridge:PILE_13_2
+                        bridge:PILE_13_3
+                        bridge:PILE_13_4
+                        bridge:PILE_13_5
+                        bridge:PILE_13_6
+                        bridge:PILE_13_7
+                        bridge:PILE_13_8
+                        bridge:PILE_13_9
+                        bridge:PILE_14_1
+                        bridge:PILE_14_2
+                        bridge:PILE_14_3
+                        bridge:PILE_14_4
+                        bridge:PILE_14_5
+                        bridge:PILE_14_6
+                        bridge:PILE_14_7
+                        bridge:PILE_14_8
+                        bridge:PILE_15_1
+                        bridge:PILE_15_10
+                        bridge:PILE_15_11
+                        bridge:PILE_15_12
+                        bridge:PILE_15_2
+                        bridge:PILE_15_3
+                        bridge:PILE_15_4
+                        bridge:PILE_15_5
+                        bridge:PILE_15_6
+                        bridge:PILE_15_7
+                        bridge:PILE_15_8
+                        bridge:PILE_15_9
+                      )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( bridge:SPAN_1_AXIS_15_14
+                        bridge:SPAN_2_AXIS_14_13
+                      )
+] .
+
+
+#################################################################
+#    Rules
+#################################################################
+
+bridge:b rdf:type swrl:Variable .
+
+bridge:x rdf:type swrl:Variable .
+
+bridge:loc rdf:type swrl:Variable .
+
+bridge:val rdf:type swrl:Variable .
+
+bridge:a4 rdf:type swrl:Variable .
+
+bridge:a rdf:type swrl:Variable .
+
+[ swrla:isRuleEnabled "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "S1"^^xsd:string ;
+   rdf:type swrl:Imp ;
+   swrl:body [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:ClassAtom ;
+                           swrl:classPredicate bridge:Bridge ;
+                           swrl:argument1 bridge:b
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:ClassAtom ;
+                                      swrl:classPredicate bridge:AbutmentElement ;
+                                      swrl:argument1 bridge:x
+                                    ] ;
+                          rdf:rest [ rdf:type swrl:AtomList ;
+                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                 swrl:propertyPredicate <http://www.semanticweb.org/taras.kozak/rules#struct_location> ;
+                                                 swrl:argument1 bridge:loc ;
+                                                 swrl:argument2 bridge:val
+                                               ] ;
+                                     rdf:rest [ rdf:type swrl:AtomList ;
+                                                rdf:first [ rdf:type swrl:BuiltinAtom ;
+                                                            swrl:builtin swrlb:containsIgnoreCase ;
+                                                            swrl:arguments [ rdf:type rdf:List ;
+                                                                             rdf:first bridge:val ;
+                                                                             rdf:rest [ rdf:type rdf:List ;
+                                                                                        rdf:first "salty_air"^^xsd:string ;
+                                                                                        rdf:rest rdf:nil
+                                                                                      ]
+                                                                           ]
+                                                          ] ;
+                                                rdf:rest rdf:nil
+                                              ]
+                                   ]
+                        ]
+             ] ;
+   swrl:head [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate bridge:mat_expositionClassReinforcementXC ;
+                           swrl:argument1 bridge:x ;
+                           swrl:argument2 "XC4"^^xsd:string
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                      swrl:propertyPredicate bridge:mat_expositionClassConcreteXF ;
+                                      swrl:argument1 bridge:x ;
+                                      swrl:argument2 "XF1"^^xsd:string
+                                    ] ;
+                          rdf:rest [ rdf:type swrl:AtomList ;
+                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                 swrl:propertyPredicate bridge:mat_expositionClassReinforcementXD ;
+                                                 swrl:argument1 bridge:x ;
+                                                 swrl:argument2 "XD1"^^xsd:string
+                                               ] ;
+                                     rdf:rest [ rdf:type swrl:AtomList ;
+                                                rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                            swrl:propertyPredicate bridge:mat_expositionClassConcreteXF ;
+                                                            swrl:argument1 bridge:x ;
+                                                            swrl:argument2 "XF2"^^xsd:string
+                                                          ] ;
+                                                rdf:rest [ rdf:type swrl:AtomList ;
+                                                           rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                                       swrl:propertyPredicate bridge:mat_moistureClassConcreteW ;
+                                                                       swrl:argument1 bridge:x ;
+                                                                       swrl:argument2 "WA"^^xsd:string
+                                                                     ] ;
+                                                           rdf:rest [ rdf:type swrl:AtomList ;
+                                                                      rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                                                  swrl:propertyPredicate bridge:mat_concreteCompressionStrengthClass ;
+                                                                                  swrl:argument1 bridge:x ;
+                                                                                  swrl:argument2 "C25/30(LP)"^^xsd:string
+                                                                                ] ;
+                                                                      rdf:rest [ rdf:type swrl:AtomList ;
+                                                                                 rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                                                             swrl:propertyPredicate bridge:elem_concreteCover ;
+                                                                                             swrl:argument1 bridge:x ;
+                                                                                             swrl:argument2 "40"^^xsd:string
+                                                                                           ] ;
+                                                                                 rdf:rest [ rdf:type swrl:AtomList ;
+                                                                                            rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                                                                        swrl:propertyPredicate bridge:mat_monitoringClassConcrete ;
+                                                                                                        swrl:argument1 bridge:x ;
+                                                                                                        swrl:argument2 "2"^^xsd:string
+                                                                                                      ] ;
+                                                                                            rdf:rest rdf:nil
+                                                                                          ]
+                                                                               ]
+                                                                    ]
+                                                         ]
+                                              ]
+                                   ]
+                        ]
+             ]
+ ] .
+
+[ swrla:isRuleEnabled "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "S2"^^xsd:string ;
+   rdf:type swrl:Imp ;
+   swrl:body [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:ClassAtom ;
+                           swrl:classPredicate bridge:AbutmentHeadWall ;
+                           swrl:argument1 bridge:a4
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:ClassAtom ;
+                                      swrl:classPredicate bridge:Cable ;
+                                      swrl:argument1 bridge:b
+                                    ] ;
+                          rdf:rest rdf:nil
+                        ]
+             ] ;
+   swrl:head [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                           swrl:propertyPredicate bridge:hasSubElement ;
+                           swrl:argument1 bridge:b ;
+                           swrl:argument2 bridge:a4
+                         ] ;
+               rdf:rest rdf:nil
+             ]
+ ] .
+
+[ swrla:isRuleEnabled "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "S3"^^xsd:string ;
+   rdf:type swrl:Imp ;
+   swrl:body [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:ClassAtom ;
+                           swrl:classPredicate bridge:Joint ;
+                           swrl:argument1 bridge:a
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:ClassAtom ;
+                                      swrl:classPredicate bridge:ExpansionJoint ;
+                                      swrl:argument1 bridge:b
+                                    ] ;
+                          rdf:rest [ rdf:type swrl:AtomList ;
+                                     rdf:first [ rdf:type swrl:BuiltinAtom ;
+                                                 swrl:builtin swrlb:contains ;
+                                                 swrl:arguments [ rdf:type rdf:List ;
+                                                                  rdf:first bridge:b ;
+                                                                  rdf:rest [ rdf:type rdf:List ;
+                                                                             rdf:first "15"^^xsd:string ;
+                                                                             rdf:rest rdf:nil
+                                                                           ]
+                                                                ]
+                                               ] ;
+                                     rdf:rest rdf:nil
+                                   ]
+                        ]
+             ] ;
+   swrl:head [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                           swrl:propertyPredicate bridge:hasSubElement ;
+                           swrl:argument1 bridge:a ;
+                           swrl:argument2 bridge:b
+                         ] ;
+               rdf:rest rdf:nil
+             ]
+ ] .
+
+###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
